@@ -58,7 +58,7 @@ using DataGen = void()(vector<int>&);   // ← 新增型別別名
         }
     }
     return { totalUs / 1e6 / trials, worstUs / 1e6 }; // 轉秒
-}
+    }
 
 ### 三個最壞輸入產生器範例
     void desc(vector<int>& a) {             // 插入、Merge 最差
