@@ -28,16 +28,18 @@
 
 ## 程式實作
 ***
-benchmark()  改版：多接一個產生器參數，用來決定輸入形態
-• genFunc == nullptr  👉  呼叫 randomPerm() → 平均情況
-• 傳入自訂函式        👉  產生極端輸入       → 最壞情況*/
+**benchmark()**：多接一個產生器參數，用來決定輸入形態
+
+genFunc == nullptr   呼叫 randomPerm() → 平均情況
+傳入自訂函式         產生極端輸入       → 最壞情況
+
 using DataGen = void()(vector<int>&);   // ← 新增型別別名
 
-Stat benchmark(Sort sortFn, DataGen genFunc,
-               int n, int trials)
-{
-    long long totalUs = 0, worstUs = 0;
-    vector<int> src(n), work(n);
+    Stat benchmark(Sort sortFn, DataGen genFunc,
+                   int n, int trials)
+    {
+        long long totalUs = 0, worstUs = 0;
+        vector<int> src(n), work(n);
 
     for (int t = 0; t < trials; ++t) {
         (genFunc ? genFunc : randomPerm)(src);     // ★ 決定要不要洗牌
@@ -58,19 +60,19 @@ Stat benchmark(Sort sortFn, DataGen genFunc,
     return { totalUs / 1e6 / trials, worstUs / 1e6 }; // 轉秒
 }
 
-/**   三個最壞輸入產生器範例   ***/
-void desc(vector<int>& a) {             // 插入、Merge 最差
-    int n = a.size();
-    for (int i = 0; i < n; ++i) a[i] = n - i;
-}
-void asc(vector<int>& a)  {             // Quick(第一元素 pivot) 最差
-    int n = a.size();
-    for (int i = 0; i < n; ++i) a[i] = i + 1;
-}
-void almostSorted(vector<int>& a) {     // 模擬「接近已排好」情境
-    asc(a);
-    if (a.size() > 1) swap(a[0], a.back());
-}
+### 三個最壞輸入產生器範例
+    void desc(vector<int>& a) {             // 插入、Merge 最差
+        int n = a.size();
+        for (int i = 0; i < n; ++i) a[i] = n - i;
+    }
+    void asc(vector<int>& a)  {             // Quick(第一元素 pivot) 最差
+        int n = a.size();
+        for (int i = 0; i < n; ++i) a[i] = i + 1;
+    }
+    void almostSorted(vector<int>& a) {     // 模擬「接近已排好」情境
+        asc(a);
+        if (a.size() > 1) swap(a[0], a.back());
+    }
 ## 效能分析
 ***
 | 演算法 | 時間複雜度 – 平均 | 時間複雜度 – 最壞 | 空間複雜度 |
